@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import {
   BookOpen,
   BrainCircuit,
@@ -20,6 +21,7 @@ import {
   ArrowUpRight,
   Play,
 } from "lucide-react";
+import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 
 const subjects = [
   { name: "Calculus", topic: "Chain Rule", mastery: 43, color: "rose" },
@@ -118,7 +120,7 @@ export default function Dashboard() {
     <main className="min-h-screen bg-[#080F1C] text-slate-100 md:flex">
       {/* Sidebar */}
       <aside className="border-b border-white/[0.08] bg-[#0A1322] p-5 md:sticky md:top-0 md:flex md:h-screen md:w-[250px] md:shrink-0 md:flex-col md:border-b-0 md:border-r">
-        <a href="/" className="mb-9 flex items-center gap-3">
+        <Link href="/" className="mb-9 flex items-center gap-3">
           <div className="rounded-2xl border border-blue-400/20 bg-blue-500/10 p-3 text-cyan-300 shadow-[0_0_25px_rgba(59,130,246,0.12)]">
             <BookOpen size={27} />
           </div>
@@ -129,7 +131,7 @@ export default function Dashboard() {
               AI Learning Companion
             </p>
           </div>
-        </a>
+        </Link>
 
         <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
           Workspace
@@ -140,7 +142,7 @@ export default function Dashboard() {
             const active = name === "Dashboard";
 
             return (
-              <a
+              <Link
                 key={name}
                 href={href}
                 aria-current={active ? "page" : undefined}
@@ -155,7 +157,7 @@ export default function Dashboard() {
                 {active && (
                   <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-400" />
                 )}
-              </a>
+              </Link>
             );
           })}
         </nav>
@@ -170,13 +172,13 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <a
+        <Link
           href="/settings"
           className="mt-5 hidden items-center gap-3 rounded-xl px-3 py-3 text-sm text-slate-400 transition hover:bg-white/[0.04] hover:text-white md:flex"
         >
           <Settings size={18} />
           Settings
-        </a>
+        </Link>
 
         <div className="mt-auto hidden border-t border-white/[0.08] pt-5 md:block">
           <div className="flex items-center gap-3">
@@ -328,13 +330,13 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <button
-                type="button"
+              <Link
+                href="/ai-tutor"
                 className="relative mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/20 bg-blue-500/10 px-4 py-3 text-sm font-medium text-blue-200 transition hover:border-blue-400/40 hover:bg-blue-500/20"
               >
                 Explore AI Tutor
                 <ArrowUpRight size={16} />
-              </button>
+              </Link>
             </div>
           </section>
 
@@ -446,6 +448,9 @@ export default function Dashboard() {
               </div>
             </div>
           </section>
+
+          {/* GitHub-Style Learning Activity Heatmap */}
+          <ActivityHeatmap />
 
           <footer className="pb-3 pt-1 text-center text-xs text-slate-600">
             StudyMate · Learn smarter. Understand deeper.

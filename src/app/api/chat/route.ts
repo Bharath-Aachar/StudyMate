@@ -37,11 +37,10 @@ export async function POST(request: Request) {
         },
         {
           role: "user",
-          content: `Current lesson: ${
-            typeof lesson === "string"
+          content: `Current lesson: ${typeof lesson === "string"
               ? lesson.slice(0, 200)
               : "General study"
-          }\n\nQuestion: ${question.trim()}`,
+            }\n\nQuestion: ${question.trim()}`,
         },
       ],
     });
