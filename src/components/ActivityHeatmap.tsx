@@ -263,27 +263,10 @@ export function ActivityHeatmap() {
 
         {/* Action buttons */}
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setShowTestModal(true)}
-            className="flex items-center gap-1.5 rounded-xl border border-blue-400/25 bg-blue-500/10 px-3 py-2 text-xs font-semibold text-blue-200 transition hover:border-blue-400/40 hover:bg-blue-500/20"
-            title="Log quick test activity for today"
-          >
-            <PlusCircle size={14} />
-            Add Activity
-          </button>
 
 
 
-          <button
-            type="button"
-            onClick={() => setShowClearConfirm(true)}
-            className="flex items-center gap-1.5 rounded-xl border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-300 transition hover:border-rose-500/40 hover:bg-rose-500/20"
-            title="Clear all stored activity history"
-          >
-            <Trash2 size={14} />
-            Clear History
-          </button>
+
         </div>
       </div>
 
@@ -426,8 +409,8 @@ export function ActivityHeatmap() {
                           onMouseMove={(e) => handleCellPosition(e, cell)}
                           onMouseLeave={handleCellMouseLeave}
                           className={`h-[13px] w-[13px] cursor-pointer rounded-[3px] border transition-all duration-150 ${cell.isFuture
-                              ? "cursor-default border-white/[0.02] bg-white/[0.01]"
-                              : shade.bgClass
+                            ? "cursor-default border-white/[0.02] bg-white/[0.01]"
+                            : shade.bgClass
                             } ${cell.isToday
                               ? "ring-1 ring-blue-400 ring-offset-1 ring-offset-[#080F1C]"
                               : ""
@@ -495,14 +478,14 @@ export function ActivityHeatmap() {
                 </span>
                 <span
                   className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${hoveredCell.cell.level === 4
-                      ? "bg-blue-600/30 text-blue-300 border border-blue-500/50"
-                      : hoveredCell.cell.level === 3
-                        ? "bg-blue-600/20 text-blue-300 border border-blue-500/40"
-                        : hoveredCell.cell.level === 2
-                          ? "bg-blue-700/20 text-blue-300 border border-blue-600/35"
-                          : hoveredCell.cell.level === 1
-                            ? "bg-blue-900/30 text-blue-400 border border-blue-800/40"
-                            : "bg-slate-800 text-slate-400 border border-slate-700"
+                    ? "bg-blue-600/30 text-blue-300 border border-blue-500/50"
+                    : hoveredCell.cell.level === 3
+                      ? "bg-blue-600/20 text-blue-300 border border-blue-500/40"
+                      : hoveredCell.cell.level === 2
+                        ? "bg-blue-700/20 text-blue-300 border border-blue-600/35"
+                        : hoveredCell.cell.level === 1
+                          ? "bg-blue-900/30 text-blue-400 border border-blue-800/40"
+                          : "bg-slate-800 text-slate-400 border border-slate-700"
                     }`}
                 >
                   {BLUE_INTENSITY_SHADES[hoveredCell.cell.level].label}
