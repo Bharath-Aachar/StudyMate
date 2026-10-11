@@ -860,7 +860,7 @@ function GamesContent() {
             {[
               { id: "all", label: "Game Hub", icon: Gamepad2 },
               { id: "quiz", label: "Speed Quiz (10s)", icon: Zap },
-              { id: "memory", label: "Memory Match", icon: Brain },
+              { id: "memory", label: "Card Flipper", icon: Brain },
               { id: "sudoku", label: "Sudoku Daily", icon: Grid3X3 },
             ].map(({ id, label, icon: Icon }) => {
               const active = activeTab === id;
@@ -1139,8 +1139,8 @@ function GamesContent() {
                   {/* 10s per-question countdown — shown once quiz is running */}
                   {quizStarted && (
                     <div className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold ${timeLeft <= 3
-                        ? "border-rose-500/40 bg-rose-500/20 text-rose-300 animate-pulse"
-                        : "border-white/10 bg-white/5 text-slate-200"
+                      ? "border-rose-500/40 bg-rose-500/20 text-rose-300 animate-pulse"
+                      : "border-white/10 bg-white/5 text-slate-200"
                       }`}>
                       <Timer size={15} />
                       <span>{timeLeft}s</span>
@@ -1317,8 +1317,8 @@ function GamesContent() {
                     }}
                     title={memoryTimerRunning ? "Pause stopwatch" : "Start stopwatch"}
                     className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all ${memoryTimerRunning
-                        ? "border-cyan-400/40 bg-cyan-500/20 text-cyan-200 shadow-[0_0_12px_rgba(34,211,238,0.2)]"
-                        : "border-white/10 bg-white/5 text-slate-300 hover:border-cyan-400/40 hover:bg-cyan-500/10 hover:text-cyan-300"
+                      ? "border-cyan-400/40 bg-cyan-500/20 text-cyan-200 shadow-[0_0_12px_rgba(34,211,238,0.2)]"
+                      : "border-white/10 bg-white/5 text-slate-300 hover:border-cyan-400/40 hover:bg-cyan-500/10 hover:text-cyan-300"
                       }`}
                   >
                     {memoryTimerRunning
