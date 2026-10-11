@@ -14,6 +14,7 @@ import {
   HelpCircle,
   CheckCircle2,
   Calendar as CalendarIcon,
+  Gamepad2,
 } from "lucide-react";
 import {
   getAllActivity,
@@ -187,6 +188,7 @@ export function ActivityHeatmap() {
         totalScore: 0,
         totalChats: 0,
         totalMcqs: 0,
+        totalGamesPlayed: 0,
         totalActiveMinutes: 0,
         totalActiveHours: 0,
         totalActiveDays: 0,
@@ -223,6 +225,7 @@ export function ActivityHeatmap() {
     recordActivity({
       chats,
       mcqs,
+      gamesPlayed: 0,
       activeSeconds: activeMinutes * 60,
     });
     setShowTestModal(false);
@@ -300,6 +303,15 @@ export function ActivityHeatmap() {
           </div>
           <p className="mt-2 text-xl font-bold text-white">{stats.totalMcqs}</p>
           <p className="mt-0.5 text-[10px] text-slate-500">2 pts each</p>
+        </div>
+
+        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3.5 transition hover:border-purple-400/25">
+          <div className="flex items-center gap-2 text-xs text-slate-400">
+            <Gamepad2 size={14} className="text-purple-400" />
+            <span>Games Played</span>
+          </div>
+          <p className="mt-2 text-xl font-bold text-white">{stats.totalGamesPlayed}</p>
+          <p className="mt-0.5 text-[10px] text-slate-500">3 pts each</p>
         </div>
 
         <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3.5 transition hover:border-indigo-400/25">
@@ -520,6 +532,16 @@ export function ActivityHeatmap() {
                   </span>
                   <span className="font-semibold text-white">
                     {hoveredCell.cell.activity.activeMinutes} min
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <span className="flex items-center gap-1.5 text-slate-400">
+                    <Gamepad2 size={13} className="text-purple-400" />
+                    Games Completed
+                  </span>
+                  <span className="font-semibold text-white">
+                    {hoveredCell.cell.activity.gamesPlayed || 0}
                   </span>
                 </div>
 

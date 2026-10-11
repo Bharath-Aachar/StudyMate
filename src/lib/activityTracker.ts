@@ -1,10 +1,11 @@
 // Activity Tracking Service for StudyMate
-// Daily score formula: 2 * MCQs + chats + activeMinutes / 5
+// Daily score formula: 2 * MCQs + chats + 3 * games + activeMinutes / 5
 
 export interface DailyActivityRecord {
   date: string; // YYYY-MM-DD
   chats: number;
   mcqs: number;
+  gamesPlayed: number;
   activeSeconds: number; // Stored in seconds for accuracy
   activeMinutes: number; // Computed active minutes
   score: number;
@@ -26,10 +27,10 @@ export function formatDateKey(date: Date = new Date()): string {
 
 /**
  * Calculate the daily activity score
- * Formula: 2 * MCQs + chats + activeMinutes / 5
+ * Formula: 2 * MCQs + chats + 3 * games + activeMinutes / 5
  */
-export function calculateDailyScore(chats: number, mcqs: number, activeMinutes: number): number {
-  const score = 2 * mcqs + chats + activeMinutes / 5;
+export function calculateDailyScore(chats: number, mcqs: number, activeMinutes: number, gamesPlayed: number = 0): number {
+  const score = 2 * mcqs + chats + 3 * gamesPlayed + activeMinutes / 5;
   return Math.round(score * 10) / 10; // Round to 1 decimal place
 }
 
@@ -127,11 +128,13 @@ export function getActivityForDate(dateKey: string = formatDateKey()): DailyActi
   if (all[dateKey]) {
     const rec = all[dateKey];
     const activeMinutes = Math.round(((rec.activeSeconds || 0) / 60) * 10) / 10;
-    const score = calculateDailyScore(rec.chats || 0, rec.mcqs || 0, activeMinutes);
+    const gamesPlayed = rec.gamesPlayed || 0;
+    const score = calculateDailyScore(rec.chats || 0, rec.mcqs || 0, activeMinutes, gamesPlayed);
     return {
       date: dateKey,
       chats: rec.chats || 0,
       mcqs: rec.mcqs || 0,
+      gamesPlayed,
       activeSeconds: rec.activeSeconds || 0,
       activeMinutes,
       score,
@@ -142,6 +145,7 @@ export function getActivityForDate(dateKey: string = formatDateKey()): DailyActi
     date: dateKey,
     chats: 0,
     mcqs: 0,
+    gamesPlayed: 0,
     activeSeconds: 0,
     activeMinutes: 0,
     score: 0,
@@ -155,6 +159,7 @@ export function recordActivity(params: {
   date?: string;
   chats?: number;
   mcqs?: number;
+  gamesPlayed?: number;
   activeSeconds?: number;
 }) {
   if (typeof window === "undefined") return;
@@ -164,6 +169,7 @@ export function recordActivity(params: {
     date: dateKey,
     chats: 0,
     mcqs: 0,
+    gamesPlayed: 0,
     activeSeconds: 0,
     activeMinutes: 0,
     score: 0,
@@ -171,14 +177,16 @@ export function recordActivity(params: {
 
   const newChats = Math.max(0, (current.chats || 0) + (params.chats || 0));
   const newMcqs = Math.max(0, (current.mcqs || 0) + (params.mcqs || 0));
+  const newGamesPlayed = Math.max(0, (current.gamesPlayed || 0) + (params.gamesPlayed || 0));
   const newActiveSeconds = Math.max(0, (current.activeSeconds || 0) + (params.activeSeconds || 0));
   const newActiveMinutes = Math.round((newActiveSeconds / 60) * 10) / 10;
-  const newScore = calculateDailyScore(newChats, newMcqs, newActiveMinutes);
+  const newScore = calculateDailyScore(newChats, newMcqs, newActiveMinutes, newGamesPlayed);
 
   all[dateKey] = {
     date: dateKey,
     chats: newChats,
     mcqs: newMcqs,
+    gamesPlayed: newGamesPlayed,
     activeSeconds: newActiveSeconds,
     activeMinutes: newActiveMinutes,
     score: newScore,
@@ -201,6 +209,15 @@ export function recordCompletedChat() {
 export function recordSolvedMCQs(count: number = 1) {
   if (count <= 0) return;
   recordActivity({ mcqs: count });
+}
+
+/**
+ * Record a completed game (quiz finished, memory matched, sudoku solved)
+ * Each completed game contributes 3 pts to the daily score
+ */
+export function recordCompletedGame(count: number = 1) {
+  if (count <= 0) return;
+  recordActivity({ gamesPlayed: count });
 }
 
 /**
@@ -268,6 +285,7 @@ export function populateSampleActivityData() {
         date: dateKey,
         chats,
         mcqs,
+        gamesPlayed: 0,
         activeSeconds,
         activeMinutes,
         score,
@@ -287,6 +305,7 @@ export function getActivityStats(records: Record<string, DailyActivityRecord>) {
   let totalScore = 0;
   let totalChats = 0;
   let totalMcqs = 0;
+  let totalGamesPlayed = 0;
   let totalActiveSeconds = 0;
   let totalActiveDays = 0;
 
@@ -296,6 +315,7 @@ export function getActivityStats(records: Record<string, DailyActivityRecord>) {
       totalScore += item.score;
       totalChats += item.chats || 0;
       totalMcqs += item.mcqs || 0;
+      totalGamesPlayed += item.gamesPlayed || 0;
       totalActiveSeconds += item.activeSeconds || 0;
       totalActiveDays++;
     }
@@ -357,6 +377,7 @@ export function getActivityStats(records: Record<string, DailyActivityRecord>) {
     totalScore: Math.round(totalScore * 10) / 10,
     totalChats,
     totalMcqs,
+    totalGamesPlayed,
     totalActiveMinutes,
     totalActiveHours,
     totalActiveDays,
