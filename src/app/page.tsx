@@ -37,7 +37,7 @@ const subjects = [
 
 const navigation = [
   { name: "Dashboard", icon: House, href: "/" },
-  { name: "My Courses", icon: BookOpen, href: "/my-courses" },
+  { name: "My Courses", icon: BookOpen, href: "/courses" },
   { name: "AI Tutor", icon: BrainCircuit, href: "/ai-tutor" },
   { name: "Practice", icon: Target, href: "/practice" },
   {
