@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { recordCompletedChat } from "@/lib/activityTracker";
 
 type Message = {
     role: "user" | "assistant";
@@ -26,9 +24,22 @@ export default function AITutorPage() {
         const text = question.trim();
         if (!text || loading) return;
 
+        const previousMessages = messages
+            .filter((m) => m.role === "user" || m.role === "assistant")
+            .slice(-10)
+            .map((m) => ({
+                role: m.role,
+                content: m.text,
+            }));
+
         setQuestion("");
-        setMessages((prev) => [...prev, { role: "user", text }]);
         setLoading(true);
+
+        setMessages((prev) => [
+            ...prev,
+            { role: "user", text },
+            { role: "assistant", text: "" },
+        ]);
 
         try {
             const response = await fetch("/api/chat", {
@@ -37,44 +48,68 @@ export default function AITutorPage() {
                 body: JSON.stringify({
                     question: text,
                     lesson: selectedLesson,
+                    history: previousMessages,
                 }),
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || "Request failed.");
+            if (!response.ok || !response.body) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Request failed.");
             }
 
-            setMessages((prev) => [
-                ...prev,
-                { role: "assistant", text: data.answer },
-            ]);
-            // Track completed AI chat in activity tracker
-            recordCompletedChat();
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let answer = "";
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                answer += decoder.decode(value, { stream: true });
+
+                setMessages((prev) => {
+                    const updated = [...prev];
+                    updated[updated.length - 1] = {
+                        role: "assistant",
+                        text: answer,
+                    };
+                    return updated;
+                });
+            }
+
+            answer += decoder.decode();
+
+            setMessages((prev) => {
+                const updated = [...prev];
+                updated[updated.length - 1] = {
+                    role: "assistant",
+                    text: answer,
+                };
+                return updated;
+            });
         } catch (error) {
-            setMessages((prev) => [
-                ...prev,
-                {
+            setMessages((prev) => {
+                const updated = [...prev];
+                updated[updated.length - 1] = {
                     role: "assistant",
                     text:
                         error instanceof Error
                             ? error.message
-                            : "Something went wrong. Try again.",
-                },
-            ]);
+                            : "Something went wrong.",
+                };
+                return updated;
+            });
         } finally {
             setLoading(false);
         }
     }
-
     return (
         <main className="min-h-screen bg-[#080b14] p-4 text-white sm:p-8">
             <div className="mx-auto flex max-w-5xl flex-col gap-6">
                 <header>
-                    <Link href="/" className="text-sm text-blue-400">
+                    <a href="/" className="text-sm text-blue-400">
                         ← Back to Dashboard
-                    </Link>
+                    </a>
 
                     <h1 className="mt-4 text-3xl font-bold">
                         StudyMate AI Tutor
