@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { recordCompletedChat } from "@/lib/activityTracker";
 
 type Message = {
     role: "user" | "assistant";
@@ -48,6 +50,8 @@ export default function AITutorPage() {
                 ...prev,
                 { role: "assistant", text: data.answer },
             ]);
+            // Track completed AI chat in activity tracker
+            recordCompletedChat();
         } catch (error) {
             setMessages((prev) => [
                 ...prev,
@@ -68,9 +72,9 @@ export default function AITutorPage() {
         <main className="min-h-screen bg-[#080b14] p-4 text-white sm:p-8">
             <div className="mx-auto flex max-w-5xl flex-col gap-6">
                 <header>
-                    <a href="/" className="text-sm text-blue-400">
+                    <Link href="/" className="text-sm text-blue-400">
                         ← Back to Dashboard
-                    </a>
+                    </Link>
 
                     <h1 className="mt-4 text-3xl font-bold">
                         StudyMate AI Tutor

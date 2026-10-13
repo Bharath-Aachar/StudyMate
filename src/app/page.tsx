@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import {
   BookOpen,
   BrainCircuit,
@@ -20,6 +21,8 @@ import {
   ArrowUpRight,
   Play,
 } from "lucide-react";
+import { ActivityHeatmap } from "@/components/ActivityHeatmap";
+import { Sidebar } from "@/components/Sidebar";
 
 const subjects = [
   { name: "Calculus", topic: "Chain Rule", mastery: 43, color: "rose" },
@@ -116,80 +119,8 @@ function MasteryRing({
 export default function Dashboard() {
   return (
     <main className="min-h-screen bg-[#080F1C] text-slate-100 md:flex">
-      {/* Sidebar */}
-      <aside className="border-b border-white/[0.08] bg-[#0A1322] p-5 md:sticky md:top-0 md:flex md:h-screen md:w-[250px] md:shrink-0 md:flex-col md:border-b-0 md:border-r">
-        <a href="/" className="mb-9 flex items-center gap-3">
-          <div className="rounded-2xl border border-blue-400/20 bg-blue-500/10 p-3 text-cyan-300 shadow-[0_0_25px_rgba(59,130,246,0.12)]">
-            <BookOpen size={27} />
-          </div>
-
-          <div>
-            <h1 className="text-xl font-bold tracking-tight">StudyMate</h1>
-            <p className="mt-0.5 text-[11px] text-slate-500">
-              AI Learning Companion
-            </p>
-          </div>
-        </a>
-
-        <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-          Workspace
-        </p>
-
-        <nav className="flex flex-wrap gap-1.5 md:flex-col">
-          {navigation.map(({ name, icon: Icon, href }) => {
-            const active = name === "Dashboard";
-
-            return (
-              <a
-                key={name}
-                href={href}
-                aria-current={active ? "page" : undefined}
-                className={`flex items-center gap-3 rounded-xl border px-3 py-3 text-sm transition-all duration-200 ${
-                  active
-                    ? "border-blue-400/20 bg-gradient-to-r from-blue-500/25 to-blue-500/10 text-blue-200 shadow-[0_0_20px_rgba(59,130,246,0.06)]"
-                    : "border-transparent text-slate-400 hover:border-white/[0.06] hover:bg-white/[0.04] hover:text-white"
-                }`}
-              >
-                <Icon size={18} strokeWidth={1.8} />
-                {name}
-                {active && (
-                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-400" />
-                )}
-              </a>
-            );
-          })}
-        </nav>
-
-        <div className="mt-7 hidden rounded-2xl border border-blue-400/15 bg-gradient-to-br from-blue-500/10 via-[#101D33] to-cyan-400/[0.03] p-4 md:block">
-          <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-blue-400/10 text-cyan-300">
-            <Sparkles size={19} />
-          </div>
-          <p className="text-sm font-semibold">Learn smarter</p>
-          <p className="mt-1 text-xs leading-5 text-slate-400">
-            Your personal AI companion is ready to help you understand more.
-          </p>
-        </div>
-
-        <a
-          href="/settings"
-          className="mt-5 hidden items-center gap-3 rounded-xl px-3 py-3 text-sm text-slate-400 transition hover:bg-white/[0.04] hover:text-white md:flex"
-        >
-          <Settings size={18} />
-          Settings
-        </a>
-
-        <div className="mt-auto hidden border-t border-white/[0.08] pt-5 md:block">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-blue-400/30 bg-blue-500/15 text-sm font-semibold text-blue-200">
-              B
-            </div>
-            <div>
-              <p className="text-sm font-medium">Bharath</p>
-              <p className="text-xs text-slate-500">Learning workspace</p>
-            </div>
-          </div>
-        </div>
-      </aside>
+      {/* Sidebar Navigation */}
+      <Sidebar activeItem="Dashboard" />
 
       {/* Main content */}
       <section className="min-w-0 flex-1">
@@ -328,13 +259,13 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <button
-                type="button"
+              <Link
+                href="/ai-tutor"
                 className="relative mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/20 bg-blue-500/10 px-4 py-3 text-sm font-medium text-blue-200 transition hover:border-blue-400/40 hover:bg-blue-500/20"
               >
                 Explore AI Tutor
                 <ArrowUpRight size={16} />
-              </button>
+              </Link>
             </div>
           </section>
 
@@ -446,6 +377,9 @@ export default function Dashboard() {
               </div>
             </div>
           </section>
+
+          {/* GitHub-Style Learning Activity Heatmap */}
+          <ActivityHeatmap />
 
           <footer className="pb-3 pt-1 text-center text-xs text-slate-600">
             StudyMate · Learn smarter. Understand deeper.
