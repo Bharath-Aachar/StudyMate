@@ -1,33 +1,35 @@
-# StudyMate — AI Study Companion
+# StudyMate AI 📚
 
-StudyMate is an AI-powered learning companion that helps students turn their study materials into personalized courses, understand difficult concepts, and track their learning progress.
+**Your AI-powered personal study companion.**
 
-Upload a PDF, generate structured lessons, study at your own pace, and ask the AI Tutor questions about your course material.
+StudyMate helps students learn from their own study materials using AI. Upload course PDFs, generate structured lessons, ask questions, practise concepts, and track your learning progress — all in one place.
 
 ## ✨ Features
 
-- **AI Tutor:** Ask questions and receive AI-generated explanations with streaming responses and contextual follow-up conversations.
-- **PDF-Based Learning:** Upload PDF study materials and extract their text for learning.
-- **AI Course Generation:** Transform uploaded PDFs into personalized courses with lesson summaries and key concepts.
-- **Course Workspace:** Read lesson content, review key points, navigate lessons, and mark lessons as completed.
-- **Learning Map:** Explore your courses, see lesson completion states, and track overall progress.
-- **Study Library:** Browse and search your saved courses and study materials.
-- **Personalized Dashboard:** View your courses, progress statistics, continue-learning section, quick links, and AI companion.
-- **Settings:** Configure study preferences, choose a daily study goal, and manage locally saved study data.
-- **Practice and Games:** Access the available practice and learning game pages.
+- **AI Tutor:** Get explanations, ask follow-up questions, and learn interactively with AI-powered responses.
+- **PDF-Based Learning:** Upload study materials and receive answers grounded in your uploaded content.
+- **AI Course Generation:** Turn uploaded PDFs into structured courses with organized lessons.
+- **Practice:** Reinforce your understanding through practice activities.
+- **Learning Map:** Explore course lessons and monitor your learning progress.
+- **Course Workspace:** Study individual lessons, mark them as completed, and continue learning.
+- **Dashboard:** View your courses, study progress, and learning activity.
+- **Library:** Browse and search your created courses.
+- **Settings:** Manage available preferences and study data.
+- **Streaming Responses:** See AI responses as they are generated.
+- **Contextual Conversations:** Ask follow-up questions while maintaining relevant conversation context.
 
 ## 🛠️ Tech Stack
 
 | Technology | Purpose |
 |---|---|
-| Next.js App Router | Application framework and routing |
+| Next.js | Full-stack application framework |
 | React | User interface |
-| TypeScript | Type-safe application code |
-| Tailwind CSS | Styling and responsive layouts |
-| Groq API | AI-powered chat and course generation |
-| `pdf-parse` | Extract text from uploaded PDFs |
-| Browser `localStorage` | Store courses, settings, and lesson progress |
-| Browser `sessionStorage` | Pass the active course material to the AI Tutor |
+| TypeScript | Type-safe development |
+| Tailwind CSS | Styling and responsive UI |
+| Groq API | AI-powered generation and responses |
+| Google Gemini API | Additional AI capabilities |
+| pdf-parse | Extract text from uploaded PDFs |
+| Browser localStorage | Store courses, preferences, and progress locally |
 
 ## 🚀 Getting Started
 
@@ -35,6 +37,7 @@ Upload a PDF, generate structured lessons, study at your own pace, and ask the A
 
 - Node.js and npm
 - A Groq API key
+- A Google Gemini API key
 
 ### 1. Clone the repository
 
@@ -51,13 +54,21 @@ npm install
 
 ### 3. Configure environment variables
 
-Create a `.env.local` file in the project root:
+Create a `.env.local` file in the project root.
+
+Add your API keys:
 
 ```env
-GROQ_API_KEY=your_groq_api_key_here
+GROQ_API_KEY=your_groq_api_key
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
-Replace the placeholder with your own API key. Keep `.env.local` private and never commit your API key to GitHub.
+Get your API keys from:
+
+- **Groq:** https://console.groq.com/keys
+- **Google Gemini:** https://aistudio.google.com/apikey
+
+Replace the placeholder values with your own keys. Keep `.env.local` private and never commit real API keys to GitHub.
 
 ### 4. Start the development server
 
@@ -67,68 +78,53 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 📚 How to Use StudyMate
-
-1. Open **My Courses**.
-2. Upload a text-readable PDF.
-3. Let StudyMate extract the content and generate a personalized course.
-4. Open the course workspace and study the generated lessons.
-5. Mark lessons as completed to update your progress.
-6. Select **Ask AI Tutor** to discuss the uploaded study material.
-7. Use the Learning Map and Library to revisit your courses and monitor your learning.
-
 ## 📁 Project Structure
 
 ```text
-studymate/
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── chat/
-│   │   │   ├── upload/
-│   │   │   └── courses/
-│   │   ├── ai-tutor/
-│   │   ├── courses/
-│   │   │   └── [courseId]/
-│   │   ├── games/
-│   │   ├── learning-map/
-│   │   ├── library/
-│   │   ├── practice/
-│   │   ├── settings/
-│   │   └── page.tsx
-│   └── components/
+StudyMate/
 ├── public/
+├── src/
+│   └── app/
+│       ├── api/
+│       │   ├── chat/
+│       │   ├── upload/
+│       │   └── courses/
+│       │       └── generate/
+│       ├── ai-tutor/
+│       ├── courses/
+│       ├── learning-map/
+│       ├── library/
+│       ├── practice/
+│       ├── games/
+│       ├── settings/
+│       ├── layout.tsx
+│       └── page.tsx
 ├── .env.local
+├── .gitignore
 ├── package.json
 └── README.md
 ```
 
-*This is a simplified overview of the application structure.*
+*The structure above highlights the main application areas; individual files may vary by version.*
 
-## 🔐 Privacy and Storage
+## 🔐 Security and Data
 
-- The Groq API key belongs in the server-side environment configuration.
-- Course records and lesson completion data are stored in the browser's local storage.
-- The active course can be passed to the AI Tutor through session storage.
-- Local browser data is not automatically synchronized across devices.
-- Clearing browser storage can remove locally saved courses and progress.
+- API keys should remain in server-side environment variables.
+- Never commit `.env.local` or expose secrets in client-side code.
+- Course data and study progress stored in browser localStorage are device- and browser-specific.
+- Uploaded study materials may be processed by configured AI services. Do not upload sensitive documents unless you understand the services' data-handling policies.
 
-## ⚠️ Current Limitations
+## 🎯 Project Goal
 
-- StudyMate currently uses browser-based storage rather than a persistent database and user-account system.
-- PDF uploads are limited by the application's configured file-size and text-extraction limits.
-- Scanned PDFs without extractable text may not work without OCR.
-- Settings for theme and study reminders are preferences; automatic theme switching and reminder notifications are not implemented yet.
-- AI-generated content may contain mistakes. Verify important information against your original study materials.
+StudyMate aims to make studying more interactive and personalized by combining course materials, AI assistance, structured learning, and progress tracking in one platform.
 
-## 🗺️ Future Improvements
+## 🔮 Future Improvements
 
-- User authentication and cloud-based course storage.
-- Persistent document storage and PDF downloads.
-- Better source citations and page-level references in AI answers.
-- Interactive quizzes and personalized practice recommendations.
-- Functional theme switching and study reminders.
-- Deployment and production monitoring.
+- Spaced repetition and personalized revision schedules.
+- More detailed learning analytics.
+- Improved quiz generation and assessment.
+- Cloud synchronization across devices.
+- Support for additional study-material formats.
 
 ## 👨‍💻 Author
 
@@ -136,6 +132,6 @@ studymate/
 
 GitHub: [@Bharath-Aachar](https://github.com/Bharath-Aachar)
 
-## 📄 License
+---
 
-Add a license file if you intend to distribute StudyMate as an open-source project. Until then, no specific open-source license is declared by this README.
+*Built to make learning smarter, more interactive, and more accessible.*
