@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Message = {
   role: "user" | "assistant";
@@ -23,6 +23,47 @@ export default function AITutorPage() {
       text: "Hey! I'm your StudyMate AI tutor. Ask me anything about your lesson!",
     },
   ]);
+
+
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("studymate-active-document");
+
+      if (!saved) return;
+
+      const active = JSON.parse(saved);
+
+      if (
+        typeof active.documentText !== "string" ||
+        !active.documentText.trim()
+      ) {
+        return;
+      }
+
+      setDocumentText(active.documentText.slice(0, 15000));
+      setDocumentName(
+        typeof active.filename === "string" ? active.filename : ""
+      );
+
+      if (typeof active.lesson === "string") {
+        setSelectedLesson(active.lesson);
+      }
+
+      setMessages([
+        {
+          role: "assistant",
+          text: `You're studying ${active.lesson || "your course"
+            } using ${active.filename || "your PDF"
+            }. Ask me anything about the uploaded material!`,
+        },
+      ]);
+
+      sessionStorage.removeItem("studymate-active-document");
+    } catch (error) {
+      console.error("Could not load active course:", error);
+    }
+  }, []);
+
 
   async function uploadPDF(file: File) {
     if (file.type !== "application/pdf") {
@@ -156,7 +197,7 @@ export default function AITutorPage() {
       setLoading(false);
     }
   }
-    return (
+  return (
     <main className="min-h-screen bg-[#080b14] p-4 text-white sm:p-8">
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
         <header>
@@ -204,18 +245,16 @@ export default function AITutorPage() {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex ${
-                  message.role === "user"
-                    ? "justify-end"
-                    : "justify-start"
-                }`}
+                className={`flex ${message.role === "user"
+                  ? "justify-end"
+                  : "justify-start"
+                  }`}
               >
                 <div
-                  className={`max-w-[90%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm leading-7 ${
-                    message.role === "user"
-                      ? "bg-blue-600"
-                      : "border border-white/10 bg-[#111827]"
-                  }`}
+                  className={`max-w-[90%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm leading-7 ${message.role === "user"
+                    ? "bg-blue-600"
+                    : "border border-white/10 bg-[#111827]"
+                    }`}
                 >
                   {message.text}
                 </div>

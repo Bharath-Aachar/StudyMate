@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 type Lesson = {
@@ -22,7 +22,7 @@ type Course = {
 
 const STORAGE_KEY = "studymate-courses";
 
-export default function CourseWorkspacePage() {
+function CourseWorkspaceContent() {
     const params = useParams<{ courseId: string }>();
     const router = useRouter();
 
@@ -239,5 +239,18 @@ export default function CourseWorkspacePage() {
                 </section>
             </div>
         </main>
+    );
+}
+export default function CourseWorkspacePage() {
+    return (
+        <Suspense
+            fallback={
+                <main className="min-h-screen bg-[#080b14] p-8 text-white">
+                    Loading your course...
+                </main>
+            }
+        >
+            <CourseWorkspaceContent />
+        </Suspense>
     );
 }
